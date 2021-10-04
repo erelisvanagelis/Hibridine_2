@@ -6,21 +6,14 @@
  * @flow strict-local
  */
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { Component, useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
-  StyleSheet,
   Text,
-  View,
-  Image,
   FlatList,
 } from 'react-native';
 
 import {
-  ListItem,
-  Avatar,
   Button,
   Card,
   Icon,
@@ -47,9 +40,9 @@ const RecipeeCard = ({ recipee, navigation }) => {
 const CategoryPage = ({ navigation, route }) => {
   const renderItem = ({ item }) => (
     <RecipeeCard recipee={item} navigation={navigation} />
-  );  
+  );
 
-  const { category } = route.params  
+  const { category } = route.params
   useEffect(() => {
     navigation.setOptions({ title: category.title })
   }, []);

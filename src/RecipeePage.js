@@ -6,24 +6,19 @@
  * @flow strict-local
  */
 
-import React, { Component, useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, { useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
     Text,
     View,
-    Image,
-    FlatList,
     ScrollView,
 } from 'react-native';
 
 import {
-    ListItem,
     Avatar,
     Button,
     Card,
-    Icon,
 } from 'react-native-elements'
 
 const RecipeeCard = ({ recipee }) => {
@@ -59,8 +54,8 @@ const RecipeeIngredients = ({ ingredients }) => {
             <View style={{ alignItems: 'center', justifyContent: 'space-around' }}>
                 <Text style={{ fontSize: 20 }}>Ingredients</Text>
             </View>
-
             <Card.Divider />
+
             {
                 ingredients.map((ingredient) => {
                     return (
@@ -136,14 +131,16 @@ const RecipeePage = ({ navigation, route }) => {
                 <RecipeeCard recipee={recipee} />
                 <RecipeeIngredients ingredients={recipee.ingredients} />
                 <RecipeeSteps steps={recipee.steps} />
-                <Button title='Comments' 
-                onPress={() => {
-                    navigation.push('CommentsPage', {
-                        id: recipee.id,
-                        title: recipee.title
-                        })}}/>
+                <View style={{ padding: 15 }}>
+                    <Button title='Comments'
+                        onPress={() => {
+                            navigation.push('CommentsPage', {
+                                id: recipee.id,
+                                title: recipee.title
+                            })
+                        }} />
+                </View>
             </ScrollView>
-
         </SafeAreaView>
     )
 }
@@ -154,7 +151,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         flexDirection: 'row',
-        // justifyContent: 'space-around',
         alignItems: 'center',
     },
 });

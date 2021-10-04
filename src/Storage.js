@@ -5,16 +5,6 @@
  * @format
  * @flow strict-local
  */
-
-import React, { Component } from 'react';
-import {
-    Button,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    View,
-    TextInput, TouchableOpacity, Alert
-} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const InsertValue = async (key, value) => {
@@ -27,9 +17,7 @@ export const InsertValue = async (key, value) => {
 
 export const InsertObject = async (key, object) => {
     try {
-        console.log(object);
         const jsonValue = JSON.stringify(object);
-        console.log(jsonValue);
         InsertValue(key, jsonValue)
     } catch (e) {
         console.log(e);
@@ -50,9 +38,7 @@ export const GetValue = async (key) => {
 export const GetObject = async (key) => {
     try {
         const jsonValue = await AsyncStorage.getItem(key)
-        console.log('GetObjectJsonValue: ' + jsonValue);
          const value = JSON.parse(jsonValue);
-         console.log('GetObject: ' + value);
         return value
     } catch (e) {
         console.log(e);

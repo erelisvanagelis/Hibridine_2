@@ -6,16 +6,12 @@
  * @flow strict-local
  */
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { Component, useEffect, useState } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, { Component } from 'react';
 import {
     SafeAreaView,
-    StyleSheet,
     Text,
     TextInput,
     View,
-    Image,
     FlatList,
 } from 'react-native';
 
@@ -24,7 +20,6 @@ import {
     Avatar,
     Button,
     Card,
-    Icon,
     Switch,
 } from 'react-native-elements'
 
@@ -32,12 +27,8 @@ import uuid from 'react-native-uuid';
 
 import {
     InsertObject,
-    InsertValue,
     GetObject,
-    GetValue,
-    RemoveValue,
 } from './Storage'
-import { thisExpression } from '@babel/types';
 
 export default class CommentsPage extends Component {
     constructor() {
@@ -50,22 +41,9 @@ export default class CommentsPage extends Component {
         }
     }
 
-    ModSwitch = () => {
-        return (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text>I'm Moderator</Text>
-                <Switch
-                    value={this.state.mod}
-                    onValueChange={(mod) => this.setState({ mod })} />
-            </View>
-        );
-
-    }
-
     TopCard = () => {
         return (
             <Card>
-                {/* <this.ModSwitch /> */}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text>I'm Moderator</Text>
                     <Switch
@@ -73,6 +51,7 @@ export default class CommentsPage extends Component {
                         onValueChange={(mod) => this.setState({ mod })} />
                 </View>
                 <Card.Divider />
+
                 <TextInput
                     placeholder="Name"
                     value={this.state.name}
@@ -90,23 +69,24 @@ export default class CommentsPage extends Component {
                     }}
                 />
                 <Card.Divider />
+
                 <Button
                     title="Add comment"
                     onPress={() => {
-                        const comment = {
-                            id: uuid.v4(),
-                            name: this.state.name,
-                            text: this.state.text,
+                        if (this.state.name == '' || this.state.text == '') {
+                            alert('Enter something')
                         }
+                        else {
+                            const comment = {
+                                id: uuid.v4(),
+                                name: this.state.name,
+                                text: this.state.text,
+                            }
 
-                        console.log('comments to add:' + comment)
-                        console.log(comment)
-                        const comments = [...this.state.comments, comment]
-                        console.log('after merge, before insert:' + comments)
-                        InsertObject(this.props.route.params.id, comments)
-                        console.log('maybe after insert:' + comment)
-                        GetObject(this.props.route.params.id).then((value) => this.setState({ comments: value, name: '', text: '' }))
-                        console.log('maybe after get:' + comment)
+                            const comments = [...this.state.comments, comment]
+                            InsertObject(this.props.route.params.id, comments)
+                            GetObject(this.props.route.params.id).then((value) => this.setState({ comments: value, name: '', text: '' }))
+                        }
                     }} />
             </Card>
         );
@@ -114,25 +94,28 @@ export default class CommentsPage extends Component {
 
     ListCard = () => {
         return (
-            <Card >
-                <Text style={{ fontSize: 20, textAlign: 'center' }}>Comments</Text>
-                <Card.Divider />
-                <FlatList
-                    keyExtractor={(comment) => comment.id}
-                    data={this.state.comments}
-                    renderItem={({ item }) => {
-                        return (
-                            <ListItem bottomDivider>
-                                <Avatar source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' }} />
-                                <ListItem.Content>
-                                    <ListItem.Subtitle>{item.name}</ListItem.Subtitle>
-                                    <ListItem.Title>{item.text}</ListItem.Title>
-                                </ListItem.Content>
-                            </ListItem>
-                        )
-                    }}
-                />
-            </Card>
+            <View style={{ padding: 15 }}>
+                <Card >
+                    <Text style={{ fontSize: 20, textAlign: 'center' }}>Comments</Text>
+                    <Card.Divider />
+                    <FlatList
+                        keyExtractor={(comment) => comment.id}
+                        data={this.state.comments}
+                        renderItem={({ item }) => {
+                            return (
+                                <ListItem bottomDivider>
+                                    <Avatar source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' }} />
+                                    <ListItem.Content>
+                                        <ListItem.Subtitle>{item.name}</ListItem.Subtitle>
+                                        <ListItem.Title>{item.text}</ListItem.Title>
+                                    </ListItem.Content>
+                                </ListItem>
+                            )
+                        }}
+                    />
+                </Card>
+            </View>
+
         );
     }
 
@@ -158,9 +141,9 @@ export default class CommentsPage extends Component {
             <ListItem bottomDivider>
                 <Avatar
                     onPress={() => {
-                        if(this.state.mod == true){
-                        this.RemoveComment(item.id)
-                        InsertObject(this.props.route.params.id, this.state.comments)                            
+                        if (this.state.mod == true) {
+                            this.RemoveComment(item.id)
+                            InsertObject(this.props.route.params.id, this.state.comments)
                         }
                         else {
                             alert("Need to be moderator to delete comments")
@@ -177,32 +160,15 @@ export default class CommentsPage extends Component {
     }
     render() {
         return (
-
             <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
                 <this.TopCard />
-
-                {/* <this.ListCard /> */}
                 <Text style={{ fontSize: 20, textAlign: 'center' }}>Comments</Text>
                 <Card.Divider />
                 <FlatList
                     keyExtractor={(comment) => comment.id}
                     data={this.state.comments}
-                    renderItem={this.renderItem}
-                // renderItem={({ item }) => {
-                //     return (
-                //         <ListItem bottomDivider>
-                //             <Avatar source={{ uri: 'https://cdn3.iconfinder.com/data/icons/user-interface-web-1/550/web-circle-circular-round_07-512.png' }} />
-                //             <ListItem.Content>
-                //                 <ListItem.Subtitle>{item.name}</ListItem.Subtitle>
-                //                 <ListItem.Title>{item.text}</ListItem.Title>
-                //             </ListItem.Content>
-                //         </ListItem>
-                //     )
-                // }}
-                />
-
+                    renderItem={this.renderItem} />
             </SafeAreaView>
         );
     }
-
 }

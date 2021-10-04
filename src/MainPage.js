@@ -1,13 +1,8 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, ScrollView, } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, } from 'react-native';
 
-import { ListItem, Avatar, Button, Card, Icon } from 'react-native-elements'
+import { ListItem, Avatar } from 'react-native-elements'
 import uuid from 'react-native-uuid';
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
 
 const DATA = require('../data.json');
 
@@ -35,8 +30,7 @@ const Categories = ({ categories, navigation }) => {
                         onPress={() =>
                             navigation.push('CategoryPage', {
                                 category: l,
-                            })}
-                    >
+                            })}>
                         <Category category={l} />
                     </ListItem>
                 ))
@@ -69,7 +63,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         flexDirection: 'row',
-        // justifyContent: 'space-around',
         alignItems: 'center',
     },
 });
