@@ -41,13 +41,6 @@ const Categories = ({ categories, navigation }) => {
 }
 
 const MainPage = ({ navigation }) => {
-    DATA.categories.map(category => {
-        category.id = uuid.v4()
-        category.items.map(item => {
-            item.id = uuid.v4()
-        })
-    })
-
     return (
         <SafeAreaView>
             <ScrollView>
