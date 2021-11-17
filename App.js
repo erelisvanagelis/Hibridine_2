@@ -10,23 +10,36 @@ import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import MainPage from './src/MainPage';
-import CategoryPage from './src/CategoryPage';
-import RecipeePage from './src/RecipeePage';
-import CommentsPage from './src/CommentsPage';
+import { Provider } from 'react-redux';
+import ReduxThunk from 'redux-thunk'
+import {createStore, applyMiddleware} from 'redux'
+import { combineReducers } from './appStore/reducers/index';
+
+import AdvertPage from './src/screens/AdvertPage';
+import CreateAdvertPage from './src/screens/CreateAdvertPage';
+import SignInPage from './src/screens/SignInPage';
+import SignUpPage from './src/screens/SignUpPage';
+import ViewAdvertsPage from './src/screens/ViewAdvertsPage';
 
 const Stack = createNativeStackNavigator();
+const store = createStore(combineReducers, applyMiddleware(ReduxThunk));
 
 const App = () => {
   return (
-    < NavigationContainer >
-      <Stack.Navigator screenOptions={{ headerTitleAlign: 'center' }}>
-        <Stack.Screen name="MainPage" component={MainPage} options={{ title: "Categories" }} />
-        <Stack.Screen name="CategoryPage" component={CategoryPage} />
-        <Stack.Screen name="RecipeePage" component={RecipeePage} />
-        <Stack.Screen name="CommentsPage" component={CommentsPage} />
-      </Stack.Navigator>
-    </NavigationContainer >
+    <Provider store={store}>
+      < NavigationContainer >
+        <Stack.Navigator screenOptions={{ headerTitleAlign: 'center' }}>
+          <Stack.Screen name="SignUpPage" component={SignUpPage}/>        
+          <Stack.Screen name="SignInPage" component={SignInPage}/>
+
+          <Stack.Screen name="AdvertPage" component={AdvertPage}/>
+          <Stack.Screen name="CreateAdvertPage" component={CreateAdvertPage}/>
+          <Stack.Screen name="ViewAdversPage" component={ViewAdvertsPage}/>
+          {/* <Stack.Screen name="MainPage" component={MainPage} options={{ title: "Categories" }} /> */}
+        </Stack.Navigator>
+      </NavigationContainer >      
+    </Provider>
+
   );
 }
 export default App
