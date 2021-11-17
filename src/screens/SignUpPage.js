@@ -20,35 +20,42 @@ import {
   Card,
   Icon,
 } from 'react-native-elements'
+import TitleTextField from '../commons/TitleTextField'
 
-const TitleTextField = ({ title, value, setValue }) => {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Text>{title + ": "}</Text>
-      <TextInput
-        value={value}
-        placeholder={"Enter your " + title}
-        onChangeText={(text) => setValue(text)}
-        secureTextEntry={false}
-      />
-    </View>
-  )
-}
+import { connect } from 'react-redux';
+import { addUser } from '../../appStore/actions/userActions';
+import { useNavigation } from '@react-navigation/native';
 
-const SignUpPage = ({ navigation, route }) => {
+const SignUpPage = (props) => {
   const [name, setName] = useState("");
-  const [surname, setSurame] = useState("");
+  const [surname, setSurname] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const navigation = useNavigation()
+  const handleSubmit = () => {
+    props.addUser(name, surname, password, phone);
+    setName("")
+    setSurname("")
+    setPassword("")
+    setPhone("")
+    navigation.goBack()
+  }
 
   return (
     <SafeAreaView style={{alignItems: 'center'}}>
       <TitleTextField title={"Name"} value={name} setValue={setName}/>
-      <TitleTextField title={"Surname"} value={surname} setValue={setSurame}/>
+      <TitleTextField title={"Surname"} value={surname} setValue={setSurname}/>
       <TitleTextField title={"Password"} value={password} setValue={setPassword}/>
       <TitleTextField title={"Phone number"} value={phone} setValue={setPhone}/>
-      <Button title="Register"/>
+      <Button title="Register" onPress={handleSubmit}/>
     </SafeAreaView>
   )
 }
-export default SignUpPage
+
+const mapToStateProps = (state) => {
+  return {
+    users: state.users
+  }
+}
+
+export default connect(mapToStateProps, { addUser })(SignUpPage);

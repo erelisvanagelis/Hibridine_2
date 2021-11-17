@@ -11,9 +11,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Provider } from 'react-redux';
-import ReduxThunk from 'redux-thunk'
-import {createStore, applyMiddleware} from 'redux'
-import { combineReducers } from './appStore/reducers/index';
+import { createStore, applyMiddleware } from 'redux';
+import combineReducers from './appStore/reducers/index';
+import ReduxThunk from 'redux-thunk';
 
 import AdvertPage from './src/screens/AdvertPage';
 import CreateAdvertPage from './src/screens/CreateAdvertPage';
@@ -28,10 +28,9 @@ const App = () => {
   return (
     <Provider store={store}>
       < NavigationContainer >
-        <Stack.Navigator screenOptions={{ headerTitleAlign: 'center' }}>
+        <Stack.Navigator initialRouteName="SignInPage" screenOptions={{ headerTitleAlign: 'center' }}>
+          <Stack.Screen name="SignInPage" component={SignInPage}/>          
           <Stack.Screen name="SignUpPage" component={SignUpPage}/>        
-          <Stack.Screen name="SignInPage" component={SignInPage}/>
-
           <Stack.Screen name="AdvertPage" component={AdvertPage}/>
           <Stack.Screen name="CreateAdvertPage" component={CreateAdvertPage}/>
           <Stack.Screen name="ViewAdversPage" component={ViewAdvertsPage}/>
@@ -39,7 +38,6 @@ const App = () => {
         </Stack.Navigator>
       </NavigationContainer >      
     </Provider>
-
   );
 }
 export default App
