@@ -36,8 +36,6 @@ const SignInPage = (props) => {
     const {users} = props.users
     
     if (users != null) {
-      // users.map(user => console.log(user))
-      console.log(users)
       const index = users.findIndex((user) => user.name === name && user.password === password);
       if (index === -1) {
         Alert.alert("nera")
