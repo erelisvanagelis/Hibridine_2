@@ -1,5 +1,12 @@
 const initialState = {
     users: [],
+    loggedUser: {
+        id: null,
+        name: null,
+        surname: null,
+        password: null,
+        phone: null
+    }
 }
 
 export const usersReducer = (state = initialState, action) => {
@@ -15,16 +22,27 @@ export const usersReducer = (state = initialState, action) => {
             console.log(user)
 
             return {
-
                 users: [...state.users, user]
-            }
-        case 'GET_USERS':
-            const users = [...state.users]
-            users.map(user => console.log(user))
-            return {
-                users: [...state.users]
             }
         default: 
             return state;
     }
 }
+
+export const userLogin = (state = initialState, action) => {
+    switch (action.type) {
+      case 'LOGIN_USER':
+        state.loggedUser = {
+            id: action.id,
+            name: action.name,
+            surname: action.surname,
+            password: action.password,
+            phone: action.phone
+        }
+        console.log("Kvieciamas userLogin")
+        console.log(state.loggedUser);
+        return state.loggedUser;
+      default:
+        return state;
+    }
+  };

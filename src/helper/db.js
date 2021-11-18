@@ -1,6 +1,4 @@
-import { RecyclerViewBackedScrollViewBase } from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
-
 
 export const db = SQLite.openDatabase(
   {
@@ -20,12 +18,12 @@ export const init = () => {
   db;
 };
 
-export const insertCar = (make, model) => {
+export const insertAdvert = (userid, title, description, price) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        'INSERT INTO Car (Make, Model) VALUES (?, ?);',
-        [make, model],
+        'INSERT INTO advert (userid, title, description, price) VALUES (?, ?, ?, ?);',
+        [userid, title, description, price],
         (tx, result) => {
           resolve(result);
         },
@@ -38,13 +36,12 @@ export const insertCar = (make, model) => {
   return promise;
 };
 
-export const createRecord = () => {
-    const make = "BMW";
-    const model = "M3";
+export const updateAdvert = (id, title, description, price) => {
+  const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        'INSERT INTO Car (Make, Model) VALUES (?, ?);',
-        [make, model],
+        'UPDATE advert SET title = ?, description = ?, price = ? WHERE id = ?',
+        [title, description, price, id],
         (tx, result) => {
           resolve(result);
         },
@@ -53,13 +50,15 @@ export const createRecord = () => {
         },
       );
     });
+  })
+  return promise;
 };
 
-export const fetchCars = () => {
+export const selectAdverts = () => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT * FROM Car', [], (tx, result) => {
+        'SELECT * FROM advert', [], (tx, result) => {
           resolve(result);
           console.log(result);
         },
@@ -72,11 +71,11 @@ export const fetchCars = () => {
   return promise
 }
 
-export const deleteCar = (id) => {
+export const deleteAdvert = (id) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        'DELETE FROM Car WHERE id=?', [id], (tx, result) => {
+        'DELETE FROM Advert WHERE id=?', [id], (tx, result) => {
           console.log(result)
           resolve(result);
         },
@@ -88,37 +87,13 @@ export const deleteCar = (id) => {
   });
   return promise
 }
-//'INSERT INTO User (ID, Username, Email, Password) VALUES (?, ?, ?, ?);',
-  //      [ID, username, email, password],
-export const checkUser = (ID, username, email, password) => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT username FROM User WHERE username=?', [username],
-        (tx, result) => {
-          if(result.rows.length > 0){ 
-            console.log('Yra useris');
-            resolve('alert');
-          } else {
-            resolve('newUser')
-          } 
-        },
-        (tx, err) => {
-          console.log('Kazkas ne taip');
-          reject(err);
-        },
-      );
-    });
-  })
-  return promise;
-};
 
-export const createUser = (ID, username, email, password) => {
+export const insertUser = (name, surname, password, phone) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx_) => {
       tx_.executeSql(
-        'INSERT INTO User (ID, Username, Email, Password) VALUES (?,?,?,?);',
-        [ID, username, email, password],
+        'INSERT INTO User (name, surname, password, phone) VALUES (?,?,?,?);',
+        [name, surname, password, phone],
         (_, result) => {
           resolve(result);
           console.log('Ivesta')
@@ -133,12 +108,12 @@ export const createUser = (ID, username, email, password) => {
   return promise;
 };
 
-export const userLogin = (username, password) => {
+export const selectUserByNamePassword = (name, password) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT ID, username, password FROM User WHERE username = ? and password = ?;',
-        [username, password],
+        'SELECT * FROM user WHERE name = ? and password = ?;',
+        [name, password],
         (_, result) => {
           resolve(result);
         },
@@ -150,20 +125,3 @@ export const userLogin = (username, password) => {
   });
   return promise;
 };
-
-/*
-db.transaction((tx_) => {
-              tx_.executeSql(
-                'INSERT INTO User (ID, Username, Email, Password VALUES (?,?,?,?);',
-                [ID, username, email, password],
-                (_, result) => {
-                  resolve(result);
-                  console.log('Ivesta')
-                }, 
-                (_, err) => {
-                  console.log('Neivesta');
-                  reject(err);
-                }
-              )
-            })
-*/

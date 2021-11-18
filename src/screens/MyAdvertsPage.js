@@ -19,7 +19,7 @@
    Icon,
  } from 'react-native-elements'
 
-const AdvertPage = (props) => {
+const MyAdvertsPage = (props) => {
   return(
     <SafeAreaView>
       <Text>YEET</Text>
@@ -27,5 +27,4 @@ const AdvertPage = (props) => {
     </SafeAreaView>
   );
 }
-
-export default AdvertPage
+export default MyAdvertsPage

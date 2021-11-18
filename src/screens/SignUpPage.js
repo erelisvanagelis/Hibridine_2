@@ -33,21 +33,22 @@ const SignUpPage = (props) => {
   const [phone, setPhone] = useState("");
   const navigation = useNavigation()
   const handleSubmit = () => {
-    props.addUser(name, surname, password, phone);
-    setName("")
-    setSurname("")
-    setPassword("")
-    setPhone("")
-    navigation.goBack()
+    props.addUser(name, surname, password, phone, () => {
+      setName("")
+      setSurname("")
+      setPassword("")
+      setPhone("")
+      navigation.goBack()
+    });
   }
 
   return (
-    <SafeAreaView style={{alignItems: 'center'}}>
-      <TitleTextField title={"Name"} value={name} setValue={setName}/>
-      <TitleTextField title={"Surname"} value={surname} setValue={setSurname}/>
-      <TitleTextField title={"Password"} value={password} setValue={setPassword}/>
-      <TitleTextField title={"Phone number"} value={phone} setValue={setPhone}/>
-      <Button title="Register" onPress={handleSubmit}/>
+    <SafeAreaView style={{ alignItems: 'center' }}>
+      <TitleTextField title={"Name"} value={name} setValue={setName} />
+      <TitleTextField title={"Surname"} value={surname} setValue={setSurname} />
+      <TitleTextField title={"Password"} value={password} setValue={setPassword} />
+      <TitleTextField title={"Phone number"} value={phone} setValue={setPhone} />
+      <Button title="Register" onPress={handleSubmit} />
     </SafeAreaView>
   )
 }
@@ -57,5 +58,4 @@ const mapToStateProps = (state) => {
     users: state.users
   }
 }
-
 export default connect(mapToStateProps, { addUser })(SignUpPage);

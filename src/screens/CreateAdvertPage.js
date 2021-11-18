@@ -19,6 +19,12 @@
    Icon,
  } from 'react-native-elements'
 
-const CreateAdvertPage = ({ navigation, route }) => {
+const CreateAdvertPage = (props) => {
+  return(
+    <SafeAreaView>
+      <Text>YEET</Text>
+
+    </SafeAreaView>
+  );
 }
 export default CreateAdvertPage
