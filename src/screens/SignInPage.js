@@ -21,51 +21,13 @@ import {
   Card,
   Icon,
   CheckBox,
+  Input,
 } from 'react-native-elements'
-import TitleTextField from '../commons/TitleTextField'
 
 import { connect } from 'react-redux';
 import { loginUser } from '../../appStore/actions/userActions';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const InsertValue = async (key, value) => {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-const InsertObject = async (key, object) => {
-  try {
-    const jsonValue = JSON.stringify(object);
-    InsertValue(key, jsonValue)
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-export const GetValue = async (key) => {
-  try {
-    const value = await AsyncStorage.getItem(key)
-    if (value !== null) {
-      return value
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-const GetObject = async (key) => {
-  try {
-    const jsonValue = await AsyncStorage.getItem(key)
-    const value = JSON.parse(jsonValue);
-    return value
-  } catch (e) {
-    console.log(e);
-  }
-}
+import { insertObject, insertValue, getObject, getValue } from '../helper/storage'
 
 const SignInPage = (props) => {
   const [name, setName] = useState("")
@@ -75,72 +37,58 @@ const SignInPage = (props) => {
   const callback = () => {
     const { loggedUser } = props.loggedUser
     if (loggedUser.id !== null) {
-      if (autoLogin) {
-        InsertObject(
-          "savedUser",
-          {
-            name: name,
-            password: password
-          })
-
-          console.log("kvieciamas pridedant")
-          GetObject("savedUser").then((user) => {
-            if (user !== null) {
-              console.log(user)
-              if (user.name !== null && user.name !== "") {
-                console.log("yra issaugoti duomenys")
-              }
-            }
-          })  
-      }
-      else {
-        InsertObject(
-          "savedUser",
-          {
-            name: null,
-            password: null,
-          })
-      }
-
+      insertValue("autoLogin", autoLogin.toString())
+      insertObject(
+        "loggedUser",
+        {
+          name: name,
+          password: password,
+        })
       navigation.navigate('AdvertTabs')
     }
     else {
-      Alert.alert("nera")
+      Alert.alert("Name or password doesn't match")
     }
   }
 
   useEffect(() => {
-    console.log("I have been mounted")
-    GetObject("savedUser").then((user) => {
-      if (user !== null) {
-        console.log(user)
-        if (user.name !== null && user.name !== "") {
-          console.log("yra issaugoti duomenys")
-          props.loginUser(user.name, user.password, callback)
+    try {
+      getValue('autoLogin').then((value) => {
+        if (value === 'true') {
+          getObject("loggedUser").then((user) => {
+            if (user.name !== null && user.name !== "") {
+              props.loginUser(user.name, user.password, callback)
+            }
+          })
         }
-      }
-    })    
+      })
+    } catch (error) {
+      Alert.alert(error)
+    }
   }, [])
 
   return (
     <SafeAreaView style={{ alignItems: 'center' }}>
-      <TitleTextField title={"Name"} value={name} setValue={setName} />
-      <TitleTextField title={"Password"} value={password} setValue={setPassword} />
+      <Input
+        placeholder="Name"
+        label="Name"
+        value={name}
+        onChangeText={value => setName(value)}
+      />
+      <Input
+        placeholder="Password"
+        label="Password"
+        value={password}
+        onChangeText={value => setPassword(value)}
+      />
       <CheckBox
         title="Do you want to remain signed in?"
         checked={autoLogin}
-        onPress={() => {
-          if (autoLogin) {
-            setAutoLogin(false)
-          }
-          else {
-            setAutoLogin(true)
-          }
-        }}
+        onPress={() => setAutoLogin(!autoLogin)}
       />
       <View style={{ flexDirection: 'row' }}>
-        <Button title="Sign up" onPress={ () => navigation.navigate('SignUpPage')} />
-        <Button title="Sign in" onPress={ () => props.loginUser(name, password, callback)} />
+        <Button title="Sign up" onPress={() => navigation.navigate('SignUpPage')} />
+        <Button title="Sign in" onPress={() => props.loginUser(name, password, callback)} />
       </View>
     </SafeAreaView>
   );
@@ -148,7 +96,6 @@ const SignInPage = (props) => {
 
 const mapToStateProps = (state) => {
   return {
-    users: state.users,
     loggedUser: state.loggedUser
   }
 }

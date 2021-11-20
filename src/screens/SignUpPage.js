@@ -9,18 +9,12 @@
 import React, { useState } from 'react';
 import {
   SafeAreaView,
-  Text,
-  FlatList,
-  View,
-  TextInput,
 } from 'react-native';
 
 import {
   Button,
-  Card,
-  Icon,
+  Input,
 } from 'react-native-elements'
-import TitleTextField from '../commons/TitleTextField'
 
 import { connect } from 'react-redux';
 import { addUser } from '../../appStore/actions/userActions';
@@ -44,10 +38,30 @@ const SignUpPage = (props) => {
 
   return (
     <SafeAreaView style={{ alignItems: 'center' }}>
-      <TitleTextField title={"Name"} value={name} setValue={setName} />
-      <TitleTextField title={"Surname"} value={surname} setValue={setSurname} />
-      <TitleTextField title={"Password"} value={password} setValue={setPassword} />
-      <TitleTextField title={"Phone number"} value={phone} setValue={setPhone} />
+      <Input
+        placeholder="Name"
+        label="Name"
+        value={name}
+        onChangeText={value => setName(value)}
+      />
+      <Input
+        placeholder="Surname"
+        label="Surname"
+        value={surname}
+        onChangeText={value => setSurname(value)}
+      />
+      <Input
+        placeholder="Password"
+        label="Password"
+        value={password}
+        onChangeText={value => setPassword(value)}
+      />
+      <Input
+        placeholder="Phone"
+        label="Phone"
+        value={phone}
+        onChangeText={value => setPhone(value)}
+      />
       <Button title="Register" onPress={handleSubmit} />
     </SafeAreaView>
   )
@@ -55,7 +69,7 @@ const SignUpPage = (props) => {
 
 const mapToStateProps = (state) => {
   return {
-    users: state.users
+    // users: state.users
   }
 }
 export default connect(mapToStateProps, { addUser })(SignUpPage);

@@ -5,5 +5,6 @@ import { combineReducers } from "redux";
 export default combineReducers({
     users: usersReducer,
     loggedUser: userLogin,
-    adverts: advertsReducer
+    adverts: advertsReducer,
+    userAdverts: advertsReducer
 })

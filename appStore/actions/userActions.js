@@ -47,6 +47,6 @@ export const loginUser = (name, password, callback) => {
     };
 };
 
-// export function getUsers() {
-//     return { type: 'GET_USERS' }
-// }
+export function getLoggedUser() {
+    return { type: 'LOGED_USER' }
+}

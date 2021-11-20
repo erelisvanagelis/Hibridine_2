@@ -1,13 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const InsertValue = async (key, value) => {
+export const insertValue = async (key, value) => {
     try {
         await AsyncStorage.setItem(key, value);
     } catch (e) {
@@ -15,16 +8,16 @@ export const InsertValue = async (key, value) => {
     }
 }
 
-export const InsertObject = async (key, object) => {
+export const insertObject = async (key, object) => {
     try {
         const jsonValue = JSON.stringify(object);
-        InsertValue(key, jsonValue)
+        insertValue(key, jsonValue)
     } catch (e) {
         console.log(e);
     }
 }
 
-export const GetValue = async (key) => {
+export const getValue = async (key) => {
     try {
         const value = await AsyncStorage.getItem(key)
         if (value !== null) {
@@ -35,23 +28,12 @@ export const GetValue = async (key) => {
     }
 }
 
-export const GetObject = async (key) => {
+export const getObject = async (key) => {
     try {
         const jsonValue = await AsyncStorage.getItem(key)
-         const value = JSON.parse(jsonValue);
+        const value = JSON.parse(jsonValue);
         return value
     } catch (e) {
         console.log(e);
     }
 }
-
-export const RemoveValue = async (key) => {
-    try {
-        await AsyncStorage.removeItem(key)
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-
-
