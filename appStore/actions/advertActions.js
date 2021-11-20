@@ -1,4 +1,4 @@
-import { insertAdvert, updateAdvert, deleteAdvert, selectAdverts } from '../../src/helper/db';
+import { insertAdvert, updateAdvert, deleteAdvert, selectAdvertsByUserId, selectInnerJoinAdvertsUser } from '../../src/helper/db';
 
 export function addAdvert(title, description, price, userId, callback) {
     return async (dispatch) => {
@@ -18,7 +18,20 @@ export function addAdvert(title, description, price, userId, callback) {
 export function getAdverts() {
     return async (dispatch) => {
         try {
-            const result = await selectAdverts();
+            const result = await selectInnerJoinAdvertsUser();
+            console.log(result);
+            dispatch({ type: 'GET_ADVERTS', rows: result.rows })
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+}
+
+export function getUserAdverts(userId) {
+    return async (dispatch) => {
+        try {
+            const result = await selectAdvertsByUserId(userId);
             console.log(result);
             dispatch({ type: 'GET_ADVERTS', rows: result.rows })
         } catch (err) {
@@ -39,11 +52,6 @@ export function updateAdvertD(id, title, description, price) {
             throw err;
         }
     };
-    return { type: 'UPDATE_ADVERT' }
-}
-
-export function getUserAdverts(userId) {
-    return { type: 'GET_USER_ADVERTS', userId: userId }
 }
 
 export function deleteAdvertD(id) {

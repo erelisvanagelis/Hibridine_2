@@ -71,6 +71,42 @@ export const selectAdverts = () => {
   return promise
 }
 
+export const selectAdvertsByUserId = (userId) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM advert WHERE userid = ?', [userId], (tx, result) => {
+          resolve(result);
+          console.log(result);
+        },
+        (tx, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise
+}
+
+export const selectInnerJoinAdvertsUser = () => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT advert.id, advert.title, advert.description, advert.price, advert.userid, user.name, user.surname, user.phone ' +
+        'FROM advert INNER JOIN user ' +
+        'ON advert.userid = user.id;', [], (tx, result) => {
+          resolve(result);
+          console.log(result)
+        },
+        (tx, err) => {
+          reject(err)
+        }
+      )
+    })
+  })
+  return promise
+}
+
 export const deleteAdvert = (id) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -97,7 +133,7 @@ export const insertUser = (name, surname, password, phone) => {
         (_, result) => {
           resolve(result);
           console.log('Ivesta')
-        }, 
+        },
         (_, err) => {
           console.log('Neivesta');
           reject(err);

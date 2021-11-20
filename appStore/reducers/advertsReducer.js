@@ -30,10 +30,10 @@ export const advertsReducer = (state = initialState, action) => {
                 description: action.description,
                 price: action.price,
                 phone: action.phone,
-                userId: action.userId
+                userId: state.adverts[index].userId
             }
             return {
-                adverts
+                adverts : [...adverts]
             }
         case 'GET_ADVERTS':
             for (let i = 0; i < action.rows.length; i++) {
@@ -43,10 +43,7 @@ export const advertsReducer = (state = initialState, action) => {
             return {
                 adverts: [...adverts]
             };
-        case 'GET_USER_ADVERTS':
-            return {
-                adverts: [...state.adverts]
-            }
+
         case 'DELETE_ADVERT':
             index = state.adverts.findIndex((advert) => advert.id === action.id);
             return {

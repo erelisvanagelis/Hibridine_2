@@ -57,6 +57,8 @@ const SignInPage = (props) => {
         if (value === 'true') {
           getObject("loggedUser").then((user) => {
             if (user.name !== null && user.name !== "") {
+              setName(user.name)
+              setPassword(user.password)
               props.loginUser(user.name, user.password, callback)
             }
           })

@@ -25,6 +25,11 @@ const Advert = ({ advert }) => {
             <Text>{advert.price}</Text>
             <Text>Description:</Text>
             <Text>{advert.description}</Text>
+            <Card.Divider />
+            <Text>Name:</Text>
+            <Text>{advert.name}</Text>
+            <Text>Phone:</Text>
+            <Text>{advert.phone}</Text>
         </Card>
     )
 }

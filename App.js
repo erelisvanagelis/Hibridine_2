@@ -19,9 +19,7 @@ import ReduxThunk from 'redux-thunk';
 import SignInPage from './src/screens/SignInPage';
 import SignUpPage from './src/screens/SignUpPage';
 import AllAdvertsPage from './src/screens/AllAdvertsPage';
-import AdvertPage from './src/screens/AdvertPage';
 import MyAdvertsPage from './src/screens/MyAdvertsPage';
-import ModifyAdvertPage from './src/screens/ModifyAdvertPage';
 import CreateAdvertPage from './src/screens/CreateAdvertPage';
 
 const Stack = createNativeStackNavigator();
@@ -46,8 +44,6 @@ const App = () => {
           <Stack.Screen name="SignInPage" component={SignInPage}/>          
           <Stack.Screen name="SignUpPage" component={SignUpPage}/>   
           <Stack.Screen name="AdvertTabs" component={AdvertTabs} />     
-          <Stack.Screen name="AdvertPage" component={AdvertPage}/>
-          <Stack.Screen name="ModifyAdvertPage" component={ModifyAdvertPage}/>
         </Stack.Navigator>
       </NavigationContainer >      
     </Provider>
