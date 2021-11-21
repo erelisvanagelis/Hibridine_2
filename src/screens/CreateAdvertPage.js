@@ -19,62 +19,52 @@ import {
   Input,
 } from 'react-native-elements'
 
-import { connect } from 'react-redux';
 import { addAdvert } from '../../appStore/actions/advertActions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const CreateAdvertPage = (props) => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
 
-  const eventHhandler = () => {
-    const { loggedUser } = props.loggedUser
-    props.addAdvert(title, description, price, loggedUser.id, callback)
-  }
-
-  const callback = (result) => {
-    if (result === "SUCESS") {
-      Alert.alert("Suceeded to add")
-      setTitle("")
-      setDescription("")
-      setPrice("")
+  const dispatch = useDispatch()
+  const { loggedUser } = useSelector(state => state.loggedUser)
+  const addNewAdvert = (title, description, price, userId, name, surname, phone) => dispatch(addAdvert(
+    title, description, price, userId, name, surname, phone, (result) => {
+      if (result === "SUCESS") {
+        Alert.alert("Suceeded to add")
+        setTitle("")
+        setDescription("")
+        setPrice("")
+      }
+      else {
+        Alert.alert("Failed to add")
+      }
     }
-    else {
-      Alert.alert("Failed to add")
-    }
-  }
+  ))
 
   return (
     <SafeAreaView>
       <Input
-        placeholder="Title"
         label="Title"
         value={title}
         onChangeText={value => setTitle(value)}
       />
       <Input
-        placeholder="Description"
         label="Description"
         value={description}
         onChangeText={value => setDescription(value)}
       />
       <Input
-        placeholder="Price"
         label="Price"
         value={price}
         onChangeText={value => setPrice(value)}
       />
       <Button
         title="Create Advert"
-        onPress={eventHhandler}
+        onPress={() => addNewAdvert(title, description, price, loggedUser.id, loggedUser.name, loggedUser.surname, loggedUser.phone)}
       />
     </SafeAreaView>
   );
 }
-
-const mapToStateProps = (state) => {
-  return {
-    loggedUser: state.loggedUser
-  }
-}
-export default connect(mapToStateProps, { addAdvert })(CreateAdvertPage);
+export default CreateAdvertPage;

@@ -1,11 +1,30 @@
-import { insertAdvert, updateAdvert, deleteAdvert, selectAdvertsByUserId, selectInnerJoinAdvertsUser } from '../../src/helper/db';
+import { insertAdvert, updateAdvert, deleteAdvert, selectAdvertsByUserId, selectInnerJoinAdvertsUser, selectMaxAdvert } from '../../src/helper/db';
 
-export function addAdvert(title, description, price, userId, callback) {
+export function addAdvert(title, description, price, userId, name, surname, phone, callback) {
     return async (dispatch) => {
         var result = "SUCESS"
         try {
-            await insertAdvert(userId, title, description, price);
-            dispatch({ type: 'ADD_ADVERT', title: title, description: description, price: price, userId: userId });
+            // console.log(' pries isertAdvert')
+            const resultA = await insertAdvert(userId, title, description, price);
+            // console.log(resultA)
+            // console.log(resultA.rows)
+            // console.log(resultA.rows.item(0))
+            // console.log(' po isertAdvert')
+            const resultD = await selectMaxAdvert()
+            // console.log(resultD)
+            // console.log(resultD.rows)
+            // console.log(resultD.rows.item(0))
+            dispatch({ 
+                type: 'ADD_ADVERT', 
+                id: resultD.rows.item(0),
+                title: title, 
+                description: description, 
+                price: price, 
+                userId: userId,
+                name: name,
+                surname: surname,
+                phone: phone
+             });
         } catch (err) {
             result = "FAILURE"
             console.log(err);
@@ -19,7 +38,7 @@ export function getAdverts() {
     return async (dispatch) => {
         try {
             const result = await selectInnerJoinAdvertsUser();
-            console.log(result);
+            // console.log(result);
             dispatch({ type: 'GET_ADVERTS', rows: result.rows })
         } catch (err) {
             console.log(err);
@@ -32,8 +51,8 @@ export function getUserAdverts(userId) {
     return async (dispatch) => {
         try {
             const result = await selectAdvertsByUserId(userId);
-            console.log(result);
-            dispatch({ type: 'GET_ADVERTS', rows: result.rows })
+            // console.log(result);
+            dispatch({ type: 'GET_USER_ADVERTS', rows: result.rows })
         } catch (err) {
             console.log(err);
             throw err;
@@ -59,7 +78,7 @@ export function deleteAdvertD(id) {
         try {
             const result = await deleteAdvert(id);
             console.log(result);
-            console.log(id);
+            // console.log(id);
             dispatch({ type: 'DELETE_ADVERT', id: id })
         } catch (err) {
             console.log(err);

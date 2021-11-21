@@ -9,96 +9,98 @@
 import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
-  Text,
-  FlatList,
   View,
-  TextInput,
-  Alert,
 } from 'react-native';
 
 import {
   Button,
-  Card,
-  Icon,
   CheckBox,
   Input,
 } from 'react-native-elements'
 
-import { connect } from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { loginUser } from '../../appStore/actions/userActions';
-import { useNavigation } from '@react-navigation/native';
-import { insertObject, insertValue, getObject, getValue } from '../helper/storage'
+import { getAutoLogin, setAutoLogin } from '../../appStore/actions/settingsActions';
 
-const SignInPage = (props) => {
+const SignInPage = ({ navigation }) => {
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
-  const [autoLogin, setAutoLogin] = useState(true)
-  const navigation = useNavigation()
-  const callback = () => {
-    const { loggedUser } = props.loggedUser
-    if (loggedUser.id !== null) {
-      insertValue("autoLogin", autoLogin.toString())
-      insertObject(
-        "loggedUser",
-        {
-          name: name,
-          password: password,
-        })
-      navigation.navigate('AdvertTabs')
-    }
-    else {
-      Alert.alert("Name or password doesn't match")
-    }
-  }
+
+  const { loggedUser } = useSelector(state => state.loggedUser)
+  const { autoLogin } = useSelector(state => state.autoLogin)
+  const dispatch = useDispatch()
+  const getAutoLoginValue = () => dispatch(getAutoLogin())
+  const setAutoLoginValue = (value) => dispatch(setAutoLogin(value))
+  const loginNewUser = (name, password) => dispatch(loginUser(name, password))
 
   useEffect(() => {
-    try {
-      getValue('autoLogin').then((value) => {
-        if (value === 'true') {
-          getObject("loggedUser").then((user) => {
-            if (user.name !== null && user.name !== "") {
-              setName(user.name)
-              setPassword(user.password)
-              props.loginUser(user.name, user.password, callback)
-            }
-          })
-        }
-      })
-    } catch (error) {
-      Alert.alert(error)
-    }
+    console.log("gaunamos vertes pirma kart atidarius ekrana")
+    getAutoLoginValue()
   }, [])
+
+  useEffect(() => {
+    console.log("autoLoginAtnaujinimas")
+    console.log(autoLogin)
+    if (autoLogin.active === true && loggedUser.id === null) {
+      setName(autoLogin.name)
+      setPassword(autoLogin.password)
+      loginNewUser(autoLogin.name, autoLogin.password)
+    }
+  }, [autoLogin])
+
+  useEffect(() => {
+    console.log("loggedUserAtnaujinimas")
+    console.log(loggedUser)
+    if (loggedUser.id !== null) {
+      if (autoLogin.active) {
+        setAutoLoginValue({
+          active: true,
+          name: name,
+          password: password
+        })
+      } else {
+        setAutoLoginValue({
+          active: false,
+          name: '',
+          password: ''
+        })
+      }
+      navigation.navigate('AdvertTabs')
+    }
+  }, [loggedUser])
 
   return (
     <SafeAreaView style={{ alignItems: 'center' }}>
       <Input
-        placeholder="Name"
         label="Name"
         value={name}
         onChangeText={value => setName(value)}
       />
       <Input
-        placeholder="Password"
         label="Password"
         value={password}
         onChangeText={value => setPassword(value)}
       />
       <CheckBox
         title="Do you want to remain signed in?"
-        checked={autoLogin}
-        onPress={() => setAutoLogin(!autoLogin)}
+        checked={autoLogin.active}
+        onPress={() => setAutoLoginValue({
+          active: !autoLogin.active,
+          name: autoLogin.name,
+          password: autoLogin.password,
+        })}
       />
       <View style={{ flexDirection: 'row' }}>
         <Button title="Sign up" onPress={() => navigation.navigate('SignUpPage')} />
-        <Button title="Sign in" onPress={() => props.loginUser(name, password, callback)} />
+        <Button title="Sign in" onPress={() => {
+          console.log("pries kvieciant loginNewUser:")
+          console.log(name)
+          console.log(password)
+          loginNewUser(name, password)
+        }} />
       </View>
     </SafeAreaView>
   );
 }
 
-const mapToStateProps = (state) => {
-  return {
-    loggedUser: state.loggedUser
-  }
-}
-export default connect(mapToStateProps, { loginUser })(SignInPage);
+export default SignInPage;

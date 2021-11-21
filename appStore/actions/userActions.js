@@ -14,7 +14,7 @@ export const addUser = (name, surname, password, phone, callback) => {
     };
 };
 
-export const loginUser = (name, password, callback) => {
+export const loginUser = (name, password) => {
     return async (dispatch) => {
         try {
             const dbResult = await selectUserByNamePassword(name, password);
@@ -43,10 +43,5 @@ export const loginUser = (name, password, callback) => {
             console.log('Klaida');
             throw err;
         }
-        callback()
     };
 };
-
-export function getLoggedUser() {
-    return { type: 'LOGED_USER' }
-}

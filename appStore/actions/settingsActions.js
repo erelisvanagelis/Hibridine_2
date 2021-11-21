@@ -1,12 +1,28 @@
-import { insertValue, getValue } from "../../src/helper/storage";
+import { insertObject, getObject } from "../../src/helper/storage";
 
-export function setAutoLogin(value) {
-    insertValue('autoLogin', value)
-    return { type: 'SET_AUTOLOGIN', value }
+export function setAutoLogin(object) {
+    insertObject('autoLogin', object)
+    return { type: 'SET_AUTOLOGIN', object: object }
 }
 
 export function getAutoLogin() {
-    getValue('autoLogin').then((value) => {
-        return { type: 'GET_AUTOLOGIN', value }
-    })
+    return async (dispatch) => {
+        const result = await getObject('autoLogin');
+        console.log('result');
+        console.log(result);
+        console.log('result');
+        if (result === null) {
+            console.log('null');
+            object = {
+                active: false,
+                name: '',
+                password: '',
+            }
+            insertObject('autoLogin', object)
+            dispatch({ type: 'SET_AUTOLOGIN', object: object })
+        }
+        else {
+            dispatch({ type: 'SET_AUTOLOGIN', object: result })
+        }
+    }
 }

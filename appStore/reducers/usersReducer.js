@@ -9,7 +9,7 @@ const initialState = {
     }
 }
 
-export const usersReducer = (state = initialState, action) => {
+const usersReducer = (state = initialState, action) => {
     console.log(action.type)
     switch (action.type) {
         case 'ADD_USER':
@@ -24,13 +24,6 @@ export const usersReducer = (state = initialState, action) => {
             return {
                 users: [...state.users, user]
             }
-        default:
-            return state;
-    }
-}
-
-export const userLogin = (state = initialState, action) => {
-    switch (action.type) {
         case 'LOGIN_USER':
             state.loggedUser = {
                 id: action.id,
@@ -44,12 +37,9 @@ export const userLogin = (state = initialState, action) => {
             return {
                 loggedUser: state.loggedUser
             }
-
-        case 'LOGED_USER':
-            return {
-                loggedUser: state.loggedUser
-            }
         default:
             return state;
     }
-};
+}
+
+export default usersReducer

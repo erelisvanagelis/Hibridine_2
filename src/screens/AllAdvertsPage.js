@@ -25,16 +25,16 @@ import {
 
 import Advert from '../commons/Advert';
 
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getAdverts } from '../../appStore/actions/advertActions';
 
-const AllAdvertsPage = (props) => {
+const AllAdvertsPage = () => {
+  const {adverts} = useSelector(state => state.adverts)
+  const dispatch = useDispatch()
+  const getAllAdverts = () => dispatch(getAdverts())
   useEffect(() => {
     try {
-      props.getAdverts()
-      console.log("Testuoju ar array")
-      console.log(props.adverts.adverts)
-      console.log("Testuoju ar array")
+      getAllAdverts()
     } catch (error) {
       Alert.alert(error)
     }
@@ -47,7 +47,7 @@ const AllAdvertsPage = (props) => {
   return (
     <SafeAreaView>
       <FlatList
-        data={props.adverts.adverts}
+        data={adverts}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
@@ -55,9 +55,4 @@ const AllAdvertsPage = (props) => {
   );
 }
 
-const mapToStateProps = (state) => {
-  return {
-    adverts: state.adverts
-  }
-}
-export default connect(mapToStateProps, { getAdverts })(AllAdvertsPage);
+export default AllAdvertsPage;

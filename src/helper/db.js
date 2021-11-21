@@ -22,8 +22,31 @@ export const insertAdvert = (userid, title, description, price) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        'INSERT INTO advert (userid, title, description, price) VALUES (?, ?, ?, ?);',
+        'INSERT INTO advert (userid, title, description, price) VALUES (?, ?, ?, ?); ' + 
+        'SELECT id FROM advert ORDER BY id DESC LIMIT 1',
         [userid, title, description, price],
+        (tx, result) => {
+          resolve(result);
+        },
+        (tx, err) => {
+          reject(err);
+        },
+      );
+    });
+  })
+  return promise;
+};
+
+
+export const selectMaxAdvert = () => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT id ' +
+        'FROM advert ' +
+        'ORDER BY id ' +
+        'DESC LIMIT 1',
+        [],
         (tx, result) => {
           resolve(result);
         },

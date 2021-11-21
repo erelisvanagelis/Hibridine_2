@@ -16,60 +16,52 @@ import {
   Input,
 } from 'react-native-elements'
 
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addUser } from '../../appStore/actions/userActions';
-import { useNavigation } from '@react-navigation/native';
 
-const SignUpPage = (props) => {
+const SignUpPage = ({ navigation }) => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const navigation = useNavigation()
-  const handleSubmit = () => {
-    props.addUser(name, surname, password, phone, () => {
+
+  const dispatch = useDispatch()
+  const addNewUser = (name, surname, password, phone) => {
+    dispatch(addUser(name, surname, password, phone, () => {
       setName("")
       setSurname("")
       setPassword("")
       setPhone("")
       navigation.goBack()
-    });
+    }))
   }
-
   return (
     <SafeAreaView style={{ alignItems: 'center' }}>
       <Input
-        placeholder="Name"
         label="Name"
         value={name}
         onChangeText={value => setName(value)}
       />
       <Input
-        placeholder="Surname"
         label="Surname"
         value={surname}
         onChangeText={value => setSurname(value)}
       />
       <Input
-        placeholder="Password"
         label="Password"
         value={password}
         onChangeText={value => setPassword(value)}
       />
       <Input
-        placeholder="Phone"
         label="Phone"
         value={phone}
         onChangeText={value => setPhone(value)}
       />
-      <Button title="Register" onPress={handleSubmit} />
+      <Button title="Register" onPress={() => {
+        addNewUser(name, surname, password, phone)
+      }} />
     </SafeAreaView>
   )
 }
 
-const mapToStateProps = (state) => {
-  return {
-    // users: state.users
-  }
-}
-export default connect(mapToStateProps, { addUser })(SignUpPage);
+export default SignUpPage;

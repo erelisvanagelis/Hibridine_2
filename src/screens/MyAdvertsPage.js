@@ -6,41 +6,72 @@
  * @flow strict-local
  */
 
- import React, { useEffect, useState } from 'react';
- import {
-   SafeAreaView,
-   Text,
-   FlatList,
- } from 'react-native';
- 
- import {
-   Button,
-   Card,
-   Icon,
- } from 'react-native-elements'
+import React, { useEffect, useState } from 'react';
+import {
+  SafeAreaView,
+  Text,
+  FlatList,
+  Alert,
+} from 'react-native';
 
- import UserAdvert from '../commons/UserAdvert';
- import { connect } from 'react-redux';
- import { getUserAdverts } from '../../appStore/actions/advertActions';
+import {
+  Button,
+  Card,
+  Icon,
+} from 'react-native-elements'
 
-const MyAdvertsPage = (props) => {
+import UserAdvert from '../commons/UserAdvert';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAdverts } from '../../appStore/actions/advertActions';
 
+const MyAdvertsPage = () => {
+  const { adverts } = useSelector(state => state.adverts)
+  const { loggedUser } = useSelector(state => state.loggedUser)
+  const [myAdverts, setMyAdverts] = useState([])
+  const dispatch = useDispatch()
+  const getAllAdverts = () => dispatch(getAdverts())
   useEffect(() => {
     try {
-      props.getUserAdverts(props.loggedUser.loggedUser.id)
+      getAllAdverts()
     } catch (error) {
       Alert.alert(error)
     }
   }, [])
 
+  useEffect(() => {
+    console.log("atnaujinamas")
+    const filtered = []    
+    try {
+      if (adverts !== null) {
+        adverts.map((advert) => {
+          if (advert.userid === loggedUser.id) {
+            console.log('patiko: ' + advert.userid + ' ' + loggedUser.id + ' - ' + advert )
+            console.log(advert)
+            filtered.push(advert);
+          }
+          else{
+            console.log('netiko: ' + advert.userid + ' ' + loggedUser.id + ' - ' + advert )
+            // console.log(advert)
+          }
+        })
+        
+      }
+
+    } catch (error) {
+      Alert.alert(error)
+    }
+    setMyAdverts(filtered)
+  }, [adverts])
+
   const renderItem = ({ item }) => (
     <UserAdvert advert={item} />
   );
 
-  return(
+  return (
     <SafeAreaView>
       <FlatList
-        data={props.adverts.adverts}
+        data={myAdverts}
+        extraData={myAdverts}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
@@ -48,10 +79,4 @@ const MyAdvertsPage = (props) => {
   );
 }
 
-const mapToStateProps = (state) => {
-  return {
-    adverts: state.adverts,
-    loggedUser: state.loggedUser
-  }
-}
-export default connect(mapToStateProps, { getUserAdverts })(MyAdvertsPage);
+export default MyAdvertsPage;

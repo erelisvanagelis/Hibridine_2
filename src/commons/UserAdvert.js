@@ -1,36 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import {
-    SafeAreaView,
-    Text,
-    FlatList,
-    View,
-    TextInput,
-    Alert,
-} from 'react-native';
-
-import {
-    Button,
-    Card,
-    Icon,
-    CheckBox,
-    Input,
-} from 'react-native-elements'
-
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { View, } from 'react-native';
+import { Button, Card, Input, } from 'react-native-elements'
+import { useDispatch } from 'react-redux';
 import { deleteAdvertD, updateAdvertD } from '../../appStore/actions/advertActions';
 
-const UserAdvert = (props) => {
-    const [title, setTitle] = useState(props.advert.title)
-    const [description, setDescription] = useState(props.advert.description)
-    const [price, setPrice] = useState(props.advert.price)
+const UserAdvert = ({ advert }) => {
+    const [title, setTitle] = useState(advert.title)
+    const [description, setDescription] = useState(advert.description)
+    const [price, setPrice] = useState(advert.price)
 
-    const handleUpdate = () => {
-        props.updateAdvertD(props.advert.id, title, description, price)
-    }
-
-    const handleDelete = () => {
-        props.deleteAdvertD(props.advert.id)
-    }
+    const dispatch = useDispatch()
+    const deleteCurrentAdvert = (id) => dispatch(deleteAdvertD(id))
+    const updateCurrentAdvert = (id, title, description, price) => dispatch(updateAdvertD(id, title, description, price))
 
     return (
         <Card>
@@ -53,23 +34,18 @@ const UserAdvert = (props) => {
                 onChangeText={value => setDescription(value)}
             />
 
-            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <Button
                     title="Delete"
-                    onPress={() => handleDelete()}
+                    onPress={() => deleteCurrentAdvert(advert.id)}
                 />
                 <Button
                     title="Update"
-                    onPress={() => handleUpdate()}
+                    onPress={() => updateCurrentAdvert(advert.id, title, description, price)}
                 />
             </View>
         </Card>
     )
 }
 
-const mapToStateProps = (state) => {
-    return {
-      loggedUser: state.loggedUser
-    }
-  }
-  export default connect(mapToStateProps, { deleteAdvertD, updateAdvertD })(UserAdvert);
+export default UserAdvert;
