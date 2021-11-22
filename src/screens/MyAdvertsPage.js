@@ -51,7 +51,6 @@ const MyAdvertsPage = () => {
           }
           else{
             console.log('netiko: ' + advert.userid + ' ' + loggedUser.id + ' - ' + advert )
-            // console.log(advert)
           }
         })
         
