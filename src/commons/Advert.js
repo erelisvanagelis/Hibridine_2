@@ -21,15 +21,12 @@ const Advert = ({ advert }) => {
         <Card>
             <Card.Title>{advert.title}</Card.Title>
             <Card.Divider />
-            <Text>Price:</Text>
-            <Text>{advert.price}</Text>
+            <Text>Price: {advert.price}</Text>
             <Text>Description:</Text>
             <Text>{advert.description}</Text>
             <Card.Divider />
-            <Text>Name:</Text>
-            <Text>{advert.name}</Text>
-            <Text>Phone:</Text>
-            <Text>{advert.phone}</Text>
+            <Text>Name: {advert.name}</Text>
+            <Text>Phone: {advert.phone}</Text>
         </Card>
     )
 }

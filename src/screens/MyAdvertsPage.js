@@ -45,12 +45,7 @@ const MyAdvertsPage = () => {
       if (adverts !== null) {
         adverts.map((advert) => {
           if (advert.userid === loggedUser.id) {
-            console.log('patiko: ' + advert.userid + ' ' + loggedUser.id + ' - ' + advert )
-            console.log(advert)
             filtered.push(advert);
-          }
-          else{
-            console.log('netiko: ' + advert.userid + ' ' + loggedUser.id + ' - ' + advert )
           }
         })
         

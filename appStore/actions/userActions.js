@@ -3,9 +3,8 @@ import { insertUser, selectUserByNamePassword } from '../../src/helper/db';
 export const addUser = (name, surname, password, phone, callback) => {
     return async (dispatch) => {
         try {
+            console.log("addUser")
             const dbResult = await insertUser(name, surname, password, phone);
-            console.log(dbResult);
-            dispatch({ type: 'ADD_USER', name: name, surname: surname, password: password, phone: phone });
         } catch (err) {
             console.log(err);
             throw err;

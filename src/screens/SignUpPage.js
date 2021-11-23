@@ -9,12 +9,15 @@
 import React, { useState } from 'react';
 import {
   SafeAreaView,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 
 import {
   Button,
   Input,
 } from 'react-native-elements'
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
 import { useDispatch } from 'react-redux';
 import { addUser } from '../../appStore/actions/userActions';
@@ -24,6 +27,7 @@ const SignUpPage = ({ navigation }) => {
   const [surname, setSurname] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const dispatch = useDispatch()
   const addNewUser = (name, surname, password, phone) => {
@@ -32,6 +36,7 @@ const SignUpPage = ({ navigation }) => {
       setSurname("")
       setPassword("")
       setPhone("")
+      setLoading(false)
       navigation.goBack()
     }))
   }
@@ -57,8 +62,10 @@ const SignUpPage = ({ navigation }) => {
         value={phone}
         onChangeText={value => setPhone(value)}
       />
+      <ActivityIndicator size="large" animating={loading}/>
       <Button title="Register" onPress={() => {
         addNewUser(name, surname, password, phone)
+        setLoading(true)
       }} />
     </SafeAreaView>
   )

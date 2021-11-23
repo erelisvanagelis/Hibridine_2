@@ -159,6 +159,7 @@ export const insertUser = (name, surname, password, phone) => {
         },
         (_, err) => {
           console.log('Neivesta');
+          console.log(err)
           reject(err);
         }
       )

@@ -4,16 +4,12 @@ export function addAdvert(title, description, price, userId, name, surname, phon
     return async (dispatch) => {
         var result = "SUCESS"
         try {
-            // console.log(' pries isertAdvert')
+            console.log('insertAvert')
             const resultA = await insertAdvert(userId, title, description, price);
-            // console.log(resultA)
-            // console.log(resultA.rows)
-            // console.log(resultA.rows.item(0))
-            // console.log(' po isertAdvert')
+            console.log('after insertAvert')
+            console.log('selectMaxAvert')
             const resultD = await selectMaxAdvert()
-            // console.log(resultD)
-            // console.log(resultD.rows)
-            // console.log(resultD.rows.item(0))
+            console.log('after selectMaxtAvert')
             dispatch({ 
                 type: 'ADD_ADVERT', 
                 id: resultD.rows.item(0),

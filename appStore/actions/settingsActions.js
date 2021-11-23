@@ -8,11 +8,7 @@ export function setAutoLogin(object) {
 export function getAutoLogin() {
     return async (dispatch) => {
         const result = await getObject('autoLogin');
-        console.log('result');
-        console.log(result);
-        console.log('result');
         if (result === null) {
-            console.log('null');
             object = {
                 active: false,
                 name: '',
